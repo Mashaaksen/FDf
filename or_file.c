@@ -36,6 +36,8 @@ void    *print(int *tab)
     return NULL;
 }*/
 
+
+
 int     **or_file(char *name, t_size *size)
 {
     int **matrix;
