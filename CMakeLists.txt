@@ -6,7 +6,7 @@ set(CMAKE_C_FLAGS "-std=c99 -Wall -Wextra -Werror")
 include_directories(includes libft/includes minilibx) # headers
 link_directories(libft minilibx_macos) # libraries
 
-set(SOURCE_FILES main.c fdf.h get_next_line.c or_file.c fdf.c) # sources
+set(SOURCE_FILES fdf.h get_next_line.c or_file.c fdf.c main.c) # sources
 
 add_executable(FdF ${SOURCE_FILES}) # compilation
 
