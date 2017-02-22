@@ -16,11 +16,15 @@ typedef struct s_win{
     void       *mlx;
     void       *win;
     void       *img;
+    int	    	bit_p_pix;
+    int	    	ls;
+    int         endion;
+    char		*str;
 }              t_win;
 
 typedef struct s_size{
-    int        x;
-    int        y;
+    double        x;
+    double        y;
 }              t_size;
 
 int		get_next_line(const int fd, char **line);
@@ -29,5 +33,6 @@ int		strchar(char *tmp);
 char	*ft_strndup(char *str);
 int     **or_file(char *name, t_size *size);
 void    fdf(int **tab, t_size size);
+void    draw_map(int  **tab, t_size size, t_win *ptr);
 
 #endif //FDF_FDF_H

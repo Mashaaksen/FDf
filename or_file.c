@@ -58,7 +58,7 @@ int     **or_file(char *name, t_size *size)
     {
 
         matrix[i] = (int *)malloc(sizeof(int) * (arr_wid((void **)ft_strsplit(str, ' ')) - 1));
-        matrix[i] = arr_create(matrix[i], ft_strsplit(str, ' '), &size->x);
+        matrix[i] = arr_create(matrix[i], ft_strsplit(str, ' '), (int *) &size->x);
         i++;
     }
     close(fd);
