@@ -4,6 +4,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/FdF.dir/or_file.c.o"
   "CMakeFiles/FdF.dir/fdf.c.o"
   "CMakeFiles/FdF.dir/draw_map.c.o"
+  "CMakeFiles/FdF.dir/trans.c.o"
   "FdF.pdb"
   "FdF"
 )

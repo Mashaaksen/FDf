@@ -24,17 +24,17 @@ int     *arr_create(int *tab, char **arr, int   *x)
     return (tab);
 }
 //проверка!
-/*
-void    *print(int *tab)
+
+void    *print(int *tab, int size)
 {
     int i;
-    int l = sizeof(tab) / sizeof(int);
+
     i = 0;
-    while (i < l)
+    while (i < size)
         printf("%d", tab[i++]);
     printf("\n");
     return NULL;
-}*/
+}
 
 
 
@@ -59,6 +59,7 @@ int     **or_file(char *name, t_size *size)
 
         matrix[i] = (int *)malloc(sizeof(int) * (arr_wid((void **)ft_strsplit(str, ' ')) - 1));
         matrix[i] = arr_create(matrix[i], ft_strsplit(str, ' '), (int *) &size->x);
+        print(matrix[i], size->x);
         i++;
     }
     close(fd);

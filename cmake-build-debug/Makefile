@@ -258,6 +258,33 @@ or_file.c.s:
 	$(MAKE) -f CMakeFiles/FdF.dir/build.make CMakeFiles/FdF.dir/or_file.c.s
 .PHONY : or_file.c.s
 
+trans.o: trans.c.o
+
+.PHONY : trans.o
+
+# target to build an object file
+trans.c.o:
+	$(MAKE) -f CMakeFiles/FdF.dir/build.make CMakeFiles/FdF.dir/trans.c.o
+.PHONY : trans.c.o
+
+trans.i: trans.c.i
+
+.PHONY : trans.i
+
+# target to preprocess a source file
+trans.c.i:
+	$(MAKE) -f CMakeFiles/FdF.dir/build.make CMakeFiles/FdF.dir/trans.c.i
+.PHONY : trans.c.i
+
+trans.s: trans.c.s
+
+.PHONY : trans.s
+
+# target to generate assembly for a file
+trans.c.s:
+	$(MAKE) -f CMakeFiles/FdF.dir/build.make CMakeFiles/FdF.dir/trans.c.s
+.PHONY : trans.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -282,6 +309,9 @@ help:
 	@echo "... or_file.o"
 	@echo "... or_file.i"
 	@echo "... or_file.s"
+	@echo "... trans.o"
+	@echo "... trans.i"
+	@echo "... trans.s"
 .PHONY : help
 
 

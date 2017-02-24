@@ -15,17 +15,18 @@
 typedef struct s_win{
     void       *mlx;
     void       *win;
-    void       *img;
-    int	    	bit_p_pix;
-    int	    	ls;
-    int         endion;
-    char		*str;
 }              t_win;
 
 typedef struct s_size{
-    double        x;
-    double        y;
+    int        x;
+    int        y;
 }              t_size;
+
+typedef struct s_ncoord{
+    int        *tab_x;
+    int        *tab_y;
+    int        *tab_z;
+}              t_ncoord;
 
 int		get_next_line(const int fd, char **line);
 int     key_hook(int keycode, t_win *param);
@@ -34,5 +35,6 @@ char	*ft_strndup(char *str);
 int     **or_file(char *name, t_size *size);
 void    fdf(int **tab, t_size size);
 void    draw_map(int  **tab, t_size size, t_win *ptr);
+void    *print(int *tab, int size);
 
 #endif //FDF_FDF_H
