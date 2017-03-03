@@ -106,9 +106,6 @@
 		<Unit filename="/nfs/2016/m/maksenov/ClionProjects/FdF/or_file.c">
 			<Option target="FdF"/>
 		</Unit>
-		<Unit filename="/nfs/2016/m/maksenov/ClionProjects/FdF/trans.c">
-			<Option target="FdF"/>
-		</Unit>
 		<Unit filename="/nfs/2016/m/maksenov/ClionProjects/FdF/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>

@@ -5,10 +5,10 @@ int     main(int ac, char **av)
     if (ac > 1)
     {
         t_size size;
-        int     **arr;
+        t_coord origin;
 
-        arr = or_file(av[1], &size);
-        fdf(arr, size);
+        origin = or_file(av[1], &size);
+        fdf(origin, size);
     }
     return (0);
 }

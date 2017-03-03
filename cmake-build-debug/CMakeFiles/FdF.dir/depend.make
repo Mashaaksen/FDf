@@ -21,7 +21,3 @@ CMakeFiles/FdF.dir/or_file.c.o: ../fdf.h
 CMakeFiles/FdF.dir/or_file.c.o: ../libft/libft.h
 CMakeFiles/FdF.dir/or_file.c.o: ../or_file.c
 
-CMakeFiles/FdF.dir/trans.c.o: ../fdf.h
-CMakeFiles/FdF.dir/trans.c.o: ../libft/libft.h
-CMakeFiles/FdF.dir/trans.c.o: ../trans.c
-
