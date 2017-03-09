@@ -1,65 +1,149 @@
 #include "fdf.h"
 
-t_coord trans(t_coord origin, t_size size)
+double    *ox(double *tab, double alpha)
 {
-    int x;
-    int y;
-    int i;
-    t_coord new;
+    double y;
+    double z;
 
-    i = 0;
-    x = 0;
-    y = 0;
-    size.beta = (M_PI * 35) / 180;
-    size.alpha = (M_PI * 45) / 180;
-    new.tab_x = (int *)malloc(sizeof(int) * size.x * size.y);
-    new.tab_y = (int *)malloc(sizeof(int) * size.x * size.y);
-    while (i < size.x * size.y)
-    {
-        if (x == size.x)
-        {
-            x = 0;
-            y++;
-        }
-        new.tab_y[i] =(int)round(-origin.tab_x[x] * cos(size.beta)
-                                 - origin.tab_z[i] * sin(size.beta));
-        new.tab_x[i] =(int)round(origin.tab_x[x] * cos(size.alpha)
-                         * sin(size.alpha) + origin.tab_y[y] * cos(size.alpha)
-                        - origin.tab_z[i] * sin(size.alpha) * cos(size.beta));
-        x++;
-        i++;
-    }
-    return (new);
+    alpha = (M_PI * alpha) / 180;
+    y = tab[1];
+    z = -tab[2];
+    tab[1] = y * cos(alpha) + z * sin(alpha);
+    tab[2] = z * cos(alpha) - y * sin(alpha);
+    return (tab);
 }
 
-void    draw_line(t_coord new, t_size size, t_win *ptr)
+double    *oy(double *tab, double beta)
 {
-    int res;
-    int i;
+    double x;
+    double z;
 
-    res = 0;
-    i = 0;
-    while (i < (size.x * size.y) - 1)
-    {
-        res = ptr->prop;
-        new.x = new.tab_x[i];
-        new.y = new.tab_y[i];
-        new.ret_x = (new.tab_x[i + 1] - new.tab_x[i]);
-        new.ret_y = (new.tab_y[i + 1] - new.tab_y[i]);
-        while (res-- > 0)
-        {
-            mlx_pixel_put(ptr->mlx, ptr->win, new.x + ptr->place, new.y + ptr->place, 0xFFFFFF);
-            new.x += new.ret_x;
-            new.y += new.ret_y;
-        }
-        i++;
-    }
+    beta = (M_PI * beta) / 180;
+    x = tab[0];
+    z = -tab[2];
+    tab[0] = x * cos(beta) - z * sin(beta);
+    tab[2] = z * cos(beta) + x * sin(beta);
+    return (tab);
 }
 
-void    draw_map(t_coord origin, t_size size, t_win *ptr)
+double    *oz(double *tab, double gama)
 {
-    t_coord new;
+    double x;
+    double y;
 
-    new = trans(origin, size);
-    draw_line(new, size, ptr);
+    gama = (M_PI * gama) / 180;
+    x = tab[0];
+    y = tab[1];
+    tab[0] = x * cos(gama) + y * sin(gama);
+    tab[1] = y * cos(gama) - x * sin(gama);
+    return (tab);
+}
+
+double     *matrix(t_win *ptr, int y, int x)
+{
+    double *t_n;
+    double *tab;
+
+    t_n = (double *)malloc(sizeof(double) * 2);
+    tab = (double *)malloc(sizeof(double) * 3);
+    tab[0] = ptr->origin[y][x][0];
+    tab[1] = ptr->origin[y][x][1];
+    tab[2] = ptr->origin[y][x][2];
+    tab = oz(tab, ptr->gama);
+    tab = ox(tab, ptr->alpha);
+    tab = oy(tab, ptr->beta);
+    t_n[0] = tab[0] * ptr->prop + ptr->left;
+    t_n[1] = tab[1] * ptr->prop + ptr->high;
+    return (t_n);
+}
+
+t_win   *trans(t_win *ptr)
+{
+    ptr->y = 0;
+    ptr->new = (double ***)malloc(sizeof(double **) * ptr->size_y);
+    while (ptr->y < ptr->size_y)
+    {
+        ptr->x = 0;
+        ptr->new[ptr->y] = (double **)malloc(sizeof(double *) * ptr->size_x);
+        while (ptr->x < ptr->size_x)
+        {
+            ptr->new[ptr->y][ptr->x] = (double *)malloc(sizeof(double) * 2);
+            ptr->x++;
+        }
+        ptr->y++;
+    }
+    ptr->y = 0;
+    while (ptr->y < ptr->size_y)
+    {
+        ptr->x = 0;
+        while (ptr->x < ptr->size_x)
+        {
+            ptr->new[ptr->y][ptr->x] = matrix(ptr, ptr->y, ptr->x);
+            ptr->x++;
+        }
+        ptr->y++;
+    }
+    return (ptr);
+}
+
+void drawLine(int x1, int y1, int x2, int y2, t_win *ptr) {
+    const int deltaX = abs(x2 - x1);
+    const int deltaY = abs(y2 - y1);
+    const int signX = x1 < x2 ? 1 : -1;
+    const int signY = y1 < y2 ? 1 : -1;
+    //
+    int error = deltaX - deltaY;
+    //
+    mlx_pixel_put(ptr->mlx, ptr->win, x2, y2, 0xFFFFFF);
+    while(x1 != x2 || y1 != y2)
+    {
+        mlx_pixel_put(ptr->mlx, ptr->win, x1, y1, 0xFFFFFF);
+        const int error2 = error * 2;
+        //
+        if(error2 > -deltaY)
+        {
+            error -= deltaY;
+            x1 += signX;
+        }
+        if(error2 < deltaX)
+        {
+            error += deltaX;
+            y1 += signY;
+        }
+    }
+
+}
+
+void   draw_map(t_win *ptr)
+{
+    ptr = trans(ptr);
+    ptr->y = 0;
+   while (ptr->y < ptr->size_y - 1)
+     {
+    ptr->x = 0;
+        while (ptr->x < ptr->size_x - 1)
+       {
+           drawLine((int) (ptr->new[ptr->y][ptr->x][0]), (int)( ptr->new[ptr->y][ptr->x][1]),
+                     (int)( ptr->new[ptr->y][ptr->x + 1][0]), (int)(ptr->new[ptr->y][ptr->x + 1][1]), ptr);
+            drawLine((int)( ptr->new[ptr->y][ptr->x][0]), (int)( ptr->new[ptr->y][ptr->x][1]), (int)( ptr->new[ptr->y + 1][ptr->x][0]), (int)(ptr->new[ptr->y + 1][ptr->x][1]), ptr);
+           ptr->x++;
+        }
+         ptr->y++;
+    }
+    ptr->y = 0;
+    ptr->x = ptr->size_x - 1;
+    while (ptr->y < ptr->size_y - 1)
+    {
+        drawLine((int) ptr->new[ptr->y][ptr->x][0], (int) ptr->new[ptr->y][ptr->x][1],
+                 (int) ptr->new[ptr->y + 1][ptr->x][0], (int) ptr->new[ptr->y + 1][ptr->x][1], ptr);
+        ptr->y++;
+    }
+    ptr->x = 0;
+    ptr->y = ptr->size_y - 1;
+    while (ptr->x < ptr->size_x - 1)
+    {
+        drawLine((int) ptr->new[ptr->y][ptr->x][0], (int) ptr->new[ptr->y][ptr->x][1],
+               (int) ptr->new[ptr->y][ptr->x + 1][0], (int) ptr->new[ptr->y][ptr->x + 1][1], ptr);
+        ptr->x++;
+    }
 }

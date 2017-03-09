@@ -10,72 +10,60 @@ int     arr_wid(void **arr)
     return (i);
 }
 
-int     *arr_create(int size)
+void    centre(t_win *ptr)
 {
-    int *tab;
-    int i;
+    double x;
+    double y;
 
-    i = 0;
-    tab = (int *) malloc(sizeof(int) * size);
-    while (i < size)
+    x = (ptr->size_x - 1) / 2;
+    y = (ptr->size_y - 1) / 2;
+    ptr->y = 0;
+    while (ptr->y < ptr->size_y)
     {
-        tab[i] = i;
-        i++;
+        ptr->x = 0;
+        while (ptr->x < ptr->size_x)
+        {
+            ptr->origin[ptr->y][ptr->x][0] = ptr->origin[ptr->y][ptr->x][0] - x;
+            ptr->origin[ptr->y][ptr->x][1] = ptr->origin[ptr->y][ptr->x][1] - y;
+            ptr->x++;
+        }
+        ptr->y++;
     }
-    return (tab);
 }
 
-int    *create_z(int *tab, char **arr, int len)
+t_win or_file(char *name)
 {
-    int j;
-    int i;
-
-    j = 0;
-    i = -1;
-    while (i++ < len)
-        ;
-    while (arr[j] != 0)
-        tab[i++] = ft_atoi(arr[j++]);
-    return (tab);
-}
-//проверка!
-void    *print(int *tab, int size)
-{
-    int i;
-
-    i = 0;
-    while (i < size)
-        printf("%d ", tab[i++]);
-    printf("\n");
-    return NULL;
-}
-
-t_coord     or_file(char *name, t_size *size)
-{
-    int x;
+    char **arr;
+    t_win ptr;
     int fd;
-    int y;
     char *str;
-    t_coord origin;
 
-    y = 0;
-    x = 0;
+    ptr.y = 0;
     fd = open(name, O_RDONLY);
     while (get_next_line((const int)fd, &str) == 1)
     {
-        x = arr_wid((void **)ft_strsplit(str, ' '));
-        y++;
+        ptr.size_x = arr_wid((void **)ft_strsplit(str, ' ')) - 1;
+        ptr.size_y++;
     }
     close(fd);
-    size->x = --x;
-    size->y = y;
-    origin.tab_x = arr_create(x);
-    origin.tab_y = arr_create(y);
-    origin.tab_z = (int *)malloc(sizeof(int) * x * y);
+    ptr.origin = (double ***)malloc(sizeof(double **) * ptr.size_y);
     fd = open(name, O_RDONLY);
-    y = 1;
     while (get_next_line((const int)fd, &str) == 1)
-        create_z(origin.tab_z, ft_strsplit(str, ' '), x * y++);
+    {
+        arr = ft_strsplit(str, ' ');
+        ptr.origin[ptr.y] = (double **)malloc(sizeof(double *) * ptr.size_x);
+        ptr.x = 0;
+        while (ptr.x < ptr.size_x)
+        {
+            ptr.origin[ptr.y][ptr.x] = (double *)malloc(sizeof(double) * 3);
+            ptr.origin[ptr.y][ptr.x][0] = ptr.x;
+            ptr.origin[ptr.y][ptr.x][1] = ptr.y;
+            ptr.origin[ptr.y][ptr.x][2] = ft_atoi(arr[ptr.x]);
+            ptr.x++;
+        }
+        ptr.y++;
+    }
+    centre(&ptr);
     close(fd);
-    return (origin);
+    return (ptr);
 }

@@ -2,13 +2,12 @@
 
 int     main(int ac, char **av)
 {
-    if (ac > 1)
+        if (ac > 1)
     {
-        t_size size;
-        t_coord origin;
+        t_win ptr;
 
-        origin = or_file(av[1], &size);
-        fdf(origin, size);
+        ptr = or_file(av[1]);
+        fdf(ptr);
     }
     return (0);
 }
